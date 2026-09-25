@@ -11,7 +11,7 @@ const poppins = Poppins({
 const inter = Inter({ subsets: ["latin"], variable: "--font-body", display: "swap" });
 
 export const metadata = {
-  title: "Group Trip Planner",
+  title: "SortMyHoliday",
   description: "Pick a trip your whole group actually commits to.",
 };
 

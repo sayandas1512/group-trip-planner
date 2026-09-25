@@ -1,4 +1,4 @@
-# Group Trip Planner
+# SortMyHoliday
 
 Solves group trip decision paralysis for a 5-person friend group: one link to
 collect preferences, a deterministic matching engine that ranks 2-3 options,
