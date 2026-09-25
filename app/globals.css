@@ -150,6 +150,18 @@ button.secondary:hover:not(:disabled) { border-color: var(--secondary); box-shad
   padding: 10px 14px; border-radius: 10px; font-size: 14px; margin: 4px 0 14px;
 }
 
+/* ---------- Preference submitted confirmation ---------- */
+.submitted-confirm {
+  text-align: center; padding: 24px 12px 8px;
+  background: rgba(0, 166, 153, 0.06);
+  border: 1.5px dashed rgba(0, 166, 153, 0.35);
+  border-radius: 14px;
+}
+.submitted-confirm-icon { font-size: 34px; margin-bottom: 6px; }
+.submitted-confirm h3 { margin: 0 0 6px; font-size: 18px; color: var(--secondary); }
+.submitted-confirm p { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
+.submitted-confirm button { max-width: 220px; margin: 0 auto; }
+
 /* ---------- Avatars / who's submitted ---------- */
 .avatar-list { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 12px; }
 .avatar-row {

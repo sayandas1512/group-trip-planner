@@ -21,6 +21,7 @@ export default function PreferenceForm({
   const [dealbreakers, setDealbreakers] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [justSubmitted, setJustSubmitted] = useState(false);
 
   function toggleType(t: string) {
     setTypes((prev) => (prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]));
@@ -47,12 +48,26 @@ export default function PreferenceForm({
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error ?? `Request failed (${res.status})`);
       }
+      setJustSubmitted(true);
       onSubmitted();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
+  }
+
+  if (justSubmitted) {
+    return (
+      <div className="submitted-confirm">
+        <div className="submitted-confirm-icon">🎉</div>
+        <h3>You&apos;re in!</h3>
+        <p>Your preferences are saved. Sit tight while the rest of the group submits theirs.</p>
+        <button type="button" className="secondary" onClick={() => setJustSubmitted(false)}>
+          ✏️ Edit my answers
+        </button>
+      </div>
+    );
   }
 
   return (
