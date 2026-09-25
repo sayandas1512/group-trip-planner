@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { TripOption, Participant } from "@/lib/types";
+import { TripOption, Participant, Preference } from "@/lib/types";
 import { destinationImageUrl } from "@/lib/destinationImages";
 
 function fitTier(score: number): "high" | "mid" | "low" {
@@ -8,7 +8,17 @@ function fitTier(score: number): "high" | "mid" | "low" {
   return "low";
 }
 
-export default function OptionsList({ options, participants }: { options: TripOption[]; participants: Participant[] }) {
+export default function OptionsList({
+  options,
+  participants,
+  preferences,
+}: {
+  options: TripOption[];
+  participants: Participant[];
+  preferences: Preference[];
+}) {
+  const prefByParticipant = new Map(preferences.map((p) => [p.participant_id, p]));
+
   return (
     <section>
       <h2 className="section-title">🏆 Ranked options</h2>
@@ -31,7 +41,7 @@ export default function OptionsList({ options, participants }: { options: TripOp
           <div className="option-body">
             <h3>{opt.destination}</h3>
             <p className="option-dates">
-              📅 {opt.date_range.start} to {opt.date_range.end}
+              📅 Group window: {opt.date_range.start} to {opt.date_range.end}
             </p>
             <ul className="fit-list">
               {participants.map((p) => {
@@ -39,6 +49,17 @@ export default function OptionsList({ options, participants }: { options: TripOp
                 return (
                   <li key={p.id} className={`fit-pill ${fitTier(score)}`}>
                     {p.name} {Math.round(score * 100)}%
+                  </li>
+                );
+              })}
+            </ul>
+            <ul className="date-list">
+              {participants.map((p) => {
+                const ranges = prefByParticipant.get(p.id)?.date_ranges ?? [];
+                if (ranges.length === 0) return null;
+                return (
+                  <li key={p.id} className="date-pill">
+                    🗓️ {p.name}: {ranges.map((r) => `${r.start} to ${r.end}`).join(", ")}
                   </li>
                 );
               })}

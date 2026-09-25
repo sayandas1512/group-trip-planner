@@ -22,19 +22,28 @@ export function findBestDateWindow(preferences: Preference[]): { range: DateRang
 
   events.sort((a, b) => a.time - b.time);
 
+  // Walk the timeline as a series of constant-coverage segments: after
+  // processing events[i], coverage is `running` until the next event's time.
+  // Keep the first segment that reaches the highest coverage seen.
   let running = 0;
   let best = 0;
   let bestStart = events[0].time;
   let bestEnd = events[0].time;
-  let windowStart = events[0].time;
 
-  for (const e of events) {
-    if (e.delta > 0 && running === 0) windowStart = e.time;
-    running += e.delta;
+  for (let i = 0; i < events.length; i++) {
+    running += events[i].delta;
+    const segStart = events[i].time;
+    const segEnd = i + 1 < events.length ? events[i + 1].time : segStart;
+
     if (running > best) {
       best = running;
-      bestStart = windowStart;
-      bestEnd = e.time;
+      bestStart = segStart;
+      bestEnd = segEnd;
+    } else if (running === best && best > 0 && segStart === bestEnd) {
+      // Same coverage level, picking up exactly where the best segment left
+      // off (e.g. several ranges starting/ending at the same instant) --
+      // extend forward rather than treating it as a new, disjoint window.
+      bestEnd = segEnd;
     }
   }
 

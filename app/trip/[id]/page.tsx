@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import PreferenceForm from "@/components/PreferenceForm";
 import OptionsList from "@/components/OptionsList";
 import CommitmentTracker from "@/components/CommitmentTracker";
-import { Trip, Participant, TripOption, Commitment } from "@/lib/types";
+import { Trip, Participant, TripOption, Commitment, Preference } from "@/lib/types";
 import { avatarColor, initials } from "@/lib/avatarColor";
 
 export default function TripPage({ params }: { params: { id: string } }) {
@@ -12,6 +12,7 @@ export default function TripPage({ params }: { params: { id: string } }) {
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [options, setOptions] = useState<TripOption[]>([]);
   const [commitments, setCommitments] = useState<Commitment[]>([]);
+  const [preferences, setPreferences] = useState<Preference[]>([]);
   const [selectedParticipant, setSelectedParticipant] = useState<string>("");
   const [generating, setGenerating] = useState(false);
   const [generateError, setGenerateError] = useState("");
@@ -24,6 +25,7 @@ export default function TripPage({ params }: { params: { id: string } }) {
       setParticipants(data.participants ?? []);
       setOptions(data.options ?? []);
       setCommitments(data.commitments ?? []);
+      setPreferences(data.preferences ?? []);
     }
   }
 
@@ -126,7 +128,7 @@ export default function TripPage({ params }: { params: { id: string } }) {
 
         {options.length > 0 && (
           <>
-            <OptionsList options={options} participants={participants} />
+            <OptionsList options={options} participants={participants} preferences={preferences} />
             <CommitmentTracker
               tripId={tripId}
               options={options}
