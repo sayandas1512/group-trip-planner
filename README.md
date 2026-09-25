@@ -25,6 +25,11 @@ vercel
 vercel --prod
 ```
 
+The GitHub repo is connected to the Vercel project, so pushes to `main` deploy
+to production automatically; preview deployments are created for other
+branches/PRs. Run `vercel --prod` manually only if you need to deploy without
+pushing (e.g. re-deploying after changing env vars).
+
 ## How it works
 
 - `lib/matching.ts` — deterministic scoring + ranking. No LLM call.
