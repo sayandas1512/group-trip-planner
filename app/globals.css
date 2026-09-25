@@ -149,6 +149,10 @@ button.secondary:hover:not(:disabled) { border-color: var(--secondary); box-shad
   color: #b3261e; background: #fdecea; border: 1px solid #f6c6c2;
   padding: 10px 14px; border-radius: 10px; font-size: 14px; margin: 4px 0 14px;
 }
+.success {
+  color: #00807a; background: rgba(0, 166, 153, 0.08); border: 1px solid rgba(0, 166, 153, 0.3);
+  padding: 10px 14px; border-radius: 10px; font-size: 14px; margin: 12px 0 0;
+}
 
 /* ---------- Preference submitted confirmation ---------- */
 .submitted-confirm {
