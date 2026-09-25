@@ -13,11 +13,18 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const participantCount = names.map((n) => n.trim()).filter(Boolean).length;
+  const notEnoughParticipants = participantCount < 2;
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    const participant_names = names.map((n) => n.trim()).filter(Boolean);
+    if (participant_names.length < 2) {
+      setError("Add at least 2 participant names to create a trip.");
+      return;
+    }
     setLoading(true);
     setError("");
-    const participant_names = names.map((n) => n.trim()).filter(Boolean);
     try {
       const res = await fetch("/api/trips", {
         method: "POST",
@@ -92,9 +99,12 @@ export default function HomePage() {
                 />
               ))}
             </div>
+            {notEnoughParticipants && (
+              <p className="field-hint">Add at least 2 participant names ({participantCount}/2 so far).</p>
+            )}
           </fieldset>
           {error && <p className="error">{error}</p>}
-          <button disabled={loading} type="submit">
+          <button disabled={loading || notEnoughParticipants} type="submit">
             {loading ? "Creating..." : "Create trip & get the link 🚀"}
           </button>
         </form>

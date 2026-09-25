@@ -121,6 +121,7 @@ input::placeholder { color: #b6afa9; }
 
 fieldset { border: none; padding: 0; margin: 0 0 16px; }
 legend { font-size: 14px; font-weight: 600; margin-bottom: 10px; padding: 0; }
+.field-hint { color: var(--accent); font-size: 13px; font-weight: 600; margin: 10px 0 0; }
 
 /* ---------- Chip / tag picker (destination types) ---------- */
 .chip-grid { display: flex; flex-wrap: wrap; gap: 8px; }
