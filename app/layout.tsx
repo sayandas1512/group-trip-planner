@@ -1,5 +1,6 @@
 import "./globals.css";
 import { ReactNode } from "react";
+import Link from "next/link";
 import { Poppins, Inter } from "next/font/google";
 
 const poppins = Poppins({
@@ -18,7 +19,14 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} ${inter.variable}`}>{children}</body>
+      <body className={`${poppins.variable} ${inter.variable}`}>
+        <header className="site-header">
+          <Link href="/" className="site-logo">
+            🧭 SortMyHoliday
+          </Link>
+        </header>
+        {children}
+      </body>
     </html>
   );
 }
