@@ -7,10 +7,12 @@ const DESTINATION_TYPES = ["beach", "mountain", "heritage", "nature", "city", "w
 export default function PreferenceForm({
   tripId,
   participantId,
+  alreadySubmitted,
   onSubmitted,
 }: {
   tripId: string;
   participantId: string;
+  alreadySubmitted?: boolean;
   onSubmitted: () => void;
 }) {
   const [budgetMin, setBudgetMin] = useState("");
@@ -21,7 +23,7 @@ export default function PreferenceForm({
   const [dealbreakers, setDealbreakers] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [justSubmitted, setJustSubmitted] = useState(false);
+  const [justSubmitted, setJustSubmitted] = useState(!!alreadySubmitted);
 
   function toggleType(t: string) {
     setTypes((prev) => (prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]));

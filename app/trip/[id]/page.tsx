@@ -107,7 +107,13 @@ export default function TripPage({ params }: { params: { id: string } }) {
                 ))}
               </select>
               {selectedParticipant && (
-                <PreferenceForm tripId={tripId} participantId={selectedParticipant} onSubmitted={load} />
+                <PreferenceForm
+                  key={selectedParticipant}
+                  tripId={tripId}
+                  participantId={selectedParticipant}
+                  alreadySubmitted={participants.find((p) => p.id === selectedParticipant)?.submitted}
+                  onSubmitted={load}
+                />
               )}
             </section>
 
