@@ -13,6 +13,7 @@ export default function TripPage({ params }: { params: { id: string } }) {
   const [commitments, setCommitments] = useState<Commitment[]>([]);
   const [selectedParticipant, setSelectedParticipant] = useState<string>("");
   const [generating, setGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState("");
 
   async function load() {
     const res = await fetch(`/api/trips/${tripId}`);
@@ -32,9 +33,19 @@ export default function TripPage({ params }: { params: { id: string } }) {
 
   async function handleGenerate() {
     setGenerating(true);
-    await fetch(`/api/trips/${tripId}/generate-options`, { method: "POST" });
-    await load();
-    setGenerating(false);
+    setGenerateError("");
+    try {
+      const res = await fetch(`/api/trips/${tripId}/generate-options`, { method: "POST" });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error ?? `Request failed (${res.status})`);
+      }
+      await load();
+    } catch (err) {
+      setGenerateError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setGenerating(false);
+    }
   }
 
   if (!trip) return <main className="container">Loading...</main>;
@@ -73,6 +84,7 @@ export default function TripPage({ params }: { params: { id: string } }) {
           <button disabled={!allSubmitted || generating} onClick={handleGenerate}>
             {generating ? "Generating options..." : allSubmitted ? "Generate ranked options" : "Waiting for everyone to submit"}
           </button>
+          {generateError && <p className="error">{generateError}</p>}
         </>
       )}
 

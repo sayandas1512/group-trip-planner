@@ -18,17 +18,28 @@ export default function CommitmentTracker({
   const [selectedParticipant, setSelectedParticipant] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleCommit() {
     if (!selectedParticipant || !selectedOption) return;
     setLoading(true);
-    await fetch(`/api/trips/${tripId}/commit`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ participant_id: selectedParticipant, option_id: selectedOption }),
-    });
-    setLoading(false);
-    onCommitted();
+    setError("");
+    try {
+      const res = await fetch(`/api/trips/${tripId}/commit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ participant_id: selectedParticipant, option_id: selectedOption }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error ?? `Request failed (${res.status})`);
+      }
+      onCommitted();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -63,6 +74,7 @@ export default function CommitmentTracker({
           {loading ? "Locking in..." : "Lock in my choice"}
         </button>
       </div>
+      {error && <p className="error">{error}</p>}
     </section>
   );
 }

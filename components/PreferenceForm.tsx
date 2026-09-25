@@ -19,6 +19,7 @@ export default function PreferenceForm({
   const [types, setTypes] = useState<string[]>([]);
   const [dealbreakers, setDealbreakers] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   function toggleType(t: string) {
     setTypes((prev) => (prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]));
@@ -27,20 +28,30 @@ export default function PreferenceForm({
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
-    await fetch(`/api/trips/${tripId}/preferences`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        participant_id: participantId,
-        budget_min: budgetMin ? Number(budgetMin) : null,
-        budget_max: budgetMax ? Number(budgetMax) : null,
-        date_ranges: start && end ? [{ start, end }] : [],
-        destination_types: types,
-        dealbreakers: dealbreakers.split(",").map((d) => d.trim()).filter(Boolean),
-      }),
-    });
-    setLoading(false);
-    onSubmitted();
+    setError("");
+    try {
+      const res = await fetch(`/api/trips/${tripId}/preferences`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          participant_id: participantId,
+          budget_min: budgetMin ? Number(budgetMin) : null,
+          budget_max: budgetMax ? Number(budgetMax) : null,
+          date_ranges: start && end ? [{ start, end }] : [],
+          destination_types: types,
+          dealbreakers: dealbreakers.split(",").map((d) => d.trim()).filter(Boolean),
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error ?? `Request failed (${res.status})`);
+      }
+      onSubmitted();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -72,6 +83,7 @@ export default function PreferenceForm({
         Dealbreakers (comma-separated, e.g. &quot;no camping, no red-eye flights&quot;)
         <input value={dealbreakers} onChange={(e) => setDealbreakers(e.target.value)} />
       </label>
+      {error && <p className="error">{error}</p>}
       <button disabled={loading} type="submit">
         {loading ? "Submitting..." : "Submit my preferences"}
       </button>
