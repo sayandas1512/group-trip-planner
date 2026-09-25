@@ -4,6 +4,7 @@ import PreferenceForm from "@/components/PreferenceForm";
 import OptionsList from "@/components/OptionsList";
 import CommitmentTracker from "@/components/CommitmentTracker";
 import { Trip, Participant, TripOption, Commitment } from "@/lib/types";
+import { avatarColor, initials } from "@/lib/avatarColor";
 
 export default function TripPage({ params }: { params: { id: string } }) {
   const tripId = params.id;
@@ -48,58 +49,88 @@ export default function TripPage({ params }: { params: { id: string } }) {
     }
   }
 
-  if (!trip) return <main className="container">Loading...</main>;
+  if (!trip) {
+    return (
+      <main className="container" style={{ paddingTop: 60 }}>
+        Loading...
+      </main>
+    );
+  }
 
   const allSubmitted = participants.length > 0 && participants.every((p) => p.submitted);
 
   return (
-    <main className="container">
-      <h1>{trip.name}</h1>
-      <p className="subtitle">Coordinator: {trip.created_by} · Commit by {trip.deadline}</p>
+    <main>
+      <div
+        className="hero trip-hero"
+        style={{
+          backgroundImage:
+            "linear-gradient(135deg, rgba(255,90,95,0.9), rgba(0,166,153,0.85))",
+        }}
+      >
+        <div className="hero-inner">
+          <span className="hero-eyebrow">🧳 {trip.name}</span>
+          <h1>{trip.name}</h1>
+          <p className="subtitle" style={{ color: "rgba(255,255,255,0.92)" }}>
+            Coordinated by {trip.created_by} · Commit by {trip.deadline.slice(0, 10)}
+          </p>
+        </div>
+      </div>
 
-      <section className="card">
-        <h2>Who&apos;s submitted</h2>
-        <ul>
-          {participants.map((p) => (
-            <li key={p.id}>{p.name}: {p.submitted ? "submitted" : "not yet"}</li>
-          ))}
-        </ul>
-      </section>
+      <div className="container">
+        <section className="card floating">
+          <h2 className="section-title">👥 Who&apos;s submitted</h2>
+          <ul className="avatar-list">
+            {participants.map((p) => (
+              <li key={p.id} className={`avatar-row ${p.submitted ? "submitted" : ""}`}>
+                <span className="avatar" style={{ background: avatarColor(p.name) }}>
+                  {initials(p.name)}
+                </span>
+                <span>
+                  <span className="avatar-name">{p.name}</span>
+                  <br />
+                  <span className="avatar-status">{p.submitted ? "Submitted ✓" : "Waiting..."}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
 
-      {options.length === 0 && (
-        <>
-          <section className="card">
-            <h2>Submit your preferences</h2>
-            <select value={selectedParticipant} onChange={(e) => setSelectedParticipant(e.target.value)}>
-              <option value="">Select your name</option>
-              {participants.map((p) => (
-                <option key={p.id} value={p.id}>{p.name}</option>
-              ))}
-            </select>
-            {selectedParticipant && (
-              <PreferenceForm tripId={tripId} participantId={selectedParticipant} onSubmitted={load} />
-            )}
-          </section>
+        {options.length === 0 && (
+          <>
+            <section className="card">
+              <h2 className="section-title">📝 Submit your preferences</h2>
+              <select value={selectedParticipant} onChange={(e) => setSelectedParticipant(e.target.value)}>
+                <option value="">Select your name</option>
+                {participants.map((p) => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+              </select>
+              {selectedParticipant && (
+                <PreferenceForm tripId={tripId} participantId={selectedParticipant} onSubmitted={load} />
+              )}
+            </section>
 
-          <button disabled={!allSubmitted || generating} onClick={handleGenerate}>
-            {generating ? "Generating options..." : allSubmitted ? "Generate ranked options" : "Waiting for everyone to submit"}
-          </button>
-          {generateError && <p className="error">{generateError}</p>}
-        </>
-      )}
+            <button disabled={!allSubmitted || generating} onClick={handleGenerate}>
+              {generating ? "Generating options..." : allSubmitted ? "Generate ranked options 🏆" : "Waiting for everyone to submit"}
+            </button>
+            {generateError && <p className="error">{generateError}</p>}
+          </>
+        )}
 
-      {options.length > 0 && (
-        <>
-          <OptionsList options={options} participants={participants} />
-          <CommitmentTracker
-            tripId={tripId}
-            options={options}
-            participants={participants}
-            commitments={commitments}
-            onCommitted={load}
-          />
-        </>
-      )}
+        {options.length > 0 && (
+          <>
+            <OptionsList options={options} participants={participants} />
+            <CommitmentTracker
+              tripId={tripId}
+              options={options}
+              participants={participants}
+              commitments={commitments}
+              onCommitted={load}
+            />
+          </>
+        )}
+      </div>
     </main>
   );
 }

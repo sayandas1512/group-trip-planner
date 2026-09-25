@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { TripOption, Participant, Commitment } from "@/lib/types";
+import { avatarColor, initials } from "@/lib/avatarColor";
 
 export default function CommitmentTracker({
   tripId,
@@ -44,14 +45,17 @@ export default function CommitmentTracker({
 
   return (
     <section className="card">
-      <h2>Commitment tracker</h2>
-      <ul>
+      <h2 className="section-title">✅ Commitment tracker</h2>
+      <ul className="commit-status-list">
         {participants.map((p) => {
           const c = commitments.find((c) => c.participant_id === p.id && c.committed);
           const opt = c ? options.find((o) => o.id === c.option_id) : null;
           return (
-            <li key={p.id}>
-              {p.name}: {c && opt ? `locked in on ${opt.destination}` : "not committed yet"}
+            <li key={p.id} className={c && opt ? "locked" : ""}>
+              <span className="avatar" style={{ background: avatarColor(p.name), width: 26, height: 26, fontSize: 11 }}>
+                {initials(p.name)}
+              </span>
+              {c && opt ? `${p.name} locked in on ${opt.destination} 🎉` : `${p.name}: not committed yet`}
             </li>
           );
         })}
@@ -71,7 +75,7 @@ export default function CommitmentTracker({
           ))}
         </select>
         <button disabled={loading} onClick={handleCommit}>
-          {loading ? "Locking in..." : "Lock in my choice"}
+          {loading ? "Locking in..." : "Lock in my choice 🔒"}
         </button>
       </div>
       {error && <p className="error">{error}</p>}

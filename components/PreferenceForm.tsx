@@ -1,5 +1,6 @@
 "use client";
 import { useState, FormEvent } from "react";
+import { DESTINATION_TYPE_ICONS } from "@/lib/destinationImages";
 
 const DESTINATION_TYPES = ["beach", "mountain", "heritage", "nature", "city", "wellness", "nightlife", "adventure"];
 
@@ -57,30 +58,32 @@ export default function PreferenceForm({
   return (
     <form onSubmit={handleSubmit} className="pref-form">
       <label>
-        Budget range per person
+        <span className="field-icon">💰</span>Budget range per person
         <div className="row">
           <input type="number" placeholder="Min" value={budgetMin} onChange={(e) => setBudgetMin(e.target.value)} />
           <input type="number" placeholder="Max" value={budgetMax} onChange={(e) => setBudgetMax(e.target.value)} />
         </div>
       </label>
       <label>
-        Available dates
+        <span className="field-icon">📅</span>Available dates
         <div className="row">
           <input type="date" value={start} onChange={(e) => setStart(e.target.value)} />
           <input type="date" value={end} onChange={(e) => setEnd(e.target.value)} />
         </div>
       </label>
       <fieldset>
-        <legend>Destination types you&apos;d want</legend>
-        {DESTINATION_TYPES.map((t) => (
-          <label key={t} className="checkbox">
-            <input type="checkbox" checked={types.includes(t)} onChange={() => toggleType(t)} />
-            {t}
-          </label>
-        ))}
+        <legend>🌴 Destination types you&apos;d want</legend>
+        <div className="chip-grid">
+          {DESTINATION_TYPES.map((t) => (
+            <label key={t} className={`chip ${types.includes(t) ? "selected" : ""}`}>
+              <input type="checkbox" checked={types.includes(t)} onChange={() => toggleType(t)} />
+              <span>{DESTINATION_TYPE_ICONS[t]}</span> {t}
+            </label>
+          ))}
+        </div>
       </fieldset>
       <label>
-        Dealbreakers (comma-separated, e.g. &quot;no camping, no red-eye flights&quot;)
+        <span className="field-icon">🚫</span>Dealbreakers (comma-separated, e.g. &quot;no camping, no red-eye flights&quot;)
         <input value={dealbreakers} onChange={(e) => setDealbreakers(e.target.value)} />
       </label>
       {error && <p className="error">{error}</p>}
