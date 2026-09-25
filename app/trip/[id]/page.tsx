@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import PreferenceForm from "@/components/PreferenceForm";
 import OptionsList from "@/components/OptionsList";
 import CommitmentTracker from "@/components/CommitmentTracker";
+import ShareLink from "@/components/ShareLink";
 import { Trip, Participant, TripOption, Commitment, Preference } from "@/lib/types";
 import { avatarColor, initials } from "@/lib/avatarColor";
 
@@ -80,7 +81,9 @@ export default function TripPage({ params }: { params: { id: string } }) {
       </div>
 
       <div className="container">
-        <section className="card floating">
+        <ShareLink tripId={tripId} />
+
+        <section className="card">
           <h2 className="section-title">👥 Who&apos;s submitted</h2>
           <ul className="avatar-list">
             {participants.map((p) => (

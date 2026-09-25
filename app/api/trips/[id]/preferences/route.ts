@@ -12,6 +12,19 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
   const supabase = supabaseServer();
 
+  const { data: participant } = await supabase
+    .from("participants")
+    .select("submitted")
+    .eq("id", participant_id)
+    .single();
+
+  if (participant?.submitted) {
+    return NextResponse.json(
+      { error: "Preferences are already submitted for this participant and can't be changed." },
+      { status: 409 }
+    );
+  }
+
   const { error: prefError } = await supabase.from("preferences").upsert(
     {
       trip_id: tripId,

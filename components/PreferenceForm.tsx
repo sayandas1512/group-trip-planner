@@ -62,12 +62,12 @@ export default function PreferenceForm({
   if (justSubmitted) {
     return (
       <div className="submitted-confirm">
-        <div className="submitted-confirm-icon">🎉</div>
+        <div className="submitted-confirm-icon">🔒</div>
         <h3>You&apos;re in!</h3>
-        <p>Your preferences are saved. Sit tight while the rest of the group submits theirs.</p>
-        <button type="button" className="secondary" onClick={() => setJustSubmitted(false)}>
-          ✏️ Edit my answers
-        </button>
+        <p>
+          Your preferences are saved and locked in — this can&apos;t be changed once submitted, so everyone&apos;s
+          answers stay exactly as they entered them. Sit tight while the rest of the group submits theirs.
+        </p>
       </div>
     );
   }

@@ -154,11 +154,6 @@ button {
 button:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(255, 90, 95, 0.4); }
 button:active:not(:disabled) { transform: translateY(0); }
 button:disabled { opacity: 0.55; cursor: not-allowed; box-shadow: none; transform: none; }
-button.secondary {
-  background: #fff; color: var(--text); border: 1.5px solid var(--border);
-  box-shadow: none;
-}
-button.secondary:hover:not(:disabled) { border-color: var(--secondary); box-shadow: var(--shadow-sm); }
 
 .error {
   color: #b3261e; background: #fdecea; border: 1px solid #f6c6c2;
@@ -255,6 +250,15 @@ button.secondary:hover:not(:disabled) { border-color: var(--secondary); box-shad
 .commit-form select { width: auto; flex: 1; min-width: 140px; margin-top: 0; }
 .commit-form button { width: auto; flex-shrink: 0; }
 
+/* ---------- Share link ---------- */
+.share-box p { color: var(--muted); font-size: 13.5px; margin: 0 0 12px; }
+.share-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.share-row input {
+  flex: 1; min-width: 180px; margin-top: 0;
+  background: #faf7f5; color: var(--muted); font-size: 13px;
+}
+.share-row button { width: auto; flex-shrink: 0; white-space: nowrap; }
+
 /* ---------- Steps (home page) ---------- */
 .steps { display: flex; gap: 14px; margin: 28px 0; flex-wrap: wrap; }
 .step {
@@ -273,4 +277,6 @@ ul { padding-left: 18px; }
   .card { padding: 18px; }
   .commit-form { flex-direction: column; }
   .commit-form select, .commit-form button { width: 100%; }
+  .share-row { flex-direction: column; }
+  .share-row input, .share-row button { width: 100%; }
 }
