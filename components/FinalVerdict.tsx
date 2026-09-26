@@ -54,7 +54,7 @@ export default function FinalVerdict({
 
   return (
     <section className="card verdict-card">
-      <h2 className="section-title">🏁 Final verdict</h2>
+      <h2 className="section-title">🏁 The Final Call</h2>
       <div
         className="verdict-banner"
         style={{ backgroundImage: `url(${destinationImageUrl(winner.option.destination)})` }}
