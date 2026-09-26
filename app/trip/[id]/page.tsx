@@ -4,6 +4,7 @@ import PreferenceForm from "@/components/PreferenceForm";
 import OptionsList from "@/components/OptionsList";
 import CommitmentTracker from "@/components/CommitmentTracker";
 import ShareLink from "@/components/ShareLink";
+import FinalVerdict from "@/components/FinalVerdict";
 import { Trip, Participant, TripOption, Commitment, Preference } from "@/lib/types";
 import { avatarColor, initials } from "@/lib/avatarColor";
 
@@ -131,6 +132,7 @@ export default function TripPage({ params }: { params: { id: string } }) {
 
         {options.length > 0 && (
           <>
+            <FinalVerdict options={options} participants={participants} commitments={commitments} />
             <OptionsList options={options} participants={participants} preferences={preferences} />
             <CommitmentTracker
               tripId={tripId}
